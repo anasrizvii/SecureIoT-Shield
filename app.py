@@ -3,9 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-# -----------------------------
-# Configuration
-# -----------------------------
+
 app.secret_key = "secureiot123"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
@@ -13,9 +11,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-# -----------------------------
-# Database Models
-# -----------------------------
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,17 +34,13 @@ class SecurityLog(db.Model):
     level = db.Column(db.String(50))
 
 
-# -----------------------------
-# Home
-# -----------------------------
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -----------------------------
-# Register
-# -----------------------------
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -86,10 +78,6 @@ def register():
 
     return render_template("register.html")
 
-
-# -----------------------------
-# Login
-# -----------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -121,11 +109,6 @@ def login():
         flash("Invalid Email or Password")
 
     return render_template("login.html")
-
-
-# -----------------------------
-# Dashboard
-# -----------------------------
 @app.route("/dashboard")
 def dashboard():
 
@@ -153,13 +136,7 @@ def dashboard():
         log_count=log_count,
         recent_logs=recent_logs
     )
-    
 
-
-
-# -----------------------------
-# Devices
-# -----------------------------
 @app.route("/devices")
 def devices():
 
@@ -174,9 +151,7 @@ def devices():
     )
 
 
-# -----------------------------
-# Add Device
-# -----------------------------
+
 @app.route("/add_device", methods=["GET", "POST"])
 def add_device():
 
@@ -210,9 +185,7 @@ def add_device():
     return render_template("add_device.html")
 
 
-# -----------------------------
-# Delete Device
-# -----------------------------
+
 @app.route("/delete_device/<int:id>")
 def delete_device(id):
 
@@ -237,9 +210,7 @@ def delete_device(id):
     return redirect("/devices")
 
 
-# -----------------------------
-# Security Logs
-# -----------------------------
+
 @app.route("/security_logs")
 def security_logs():
 
@@ -254,9 +225,8 @@ def security_logs():
     )
 
 
-# -----------------------------
-# Threat Detection
-# -----------------------------
+
+
 @app.route("/threat_detection")
 def threat_detection():
 
@@ -281,9 +251,7 @@ def threat_detection():
     )
 
 
-# -----------------------------
-# Logout
-# -----------------------------
+
 @app.route("/logout")
 def logout():
 
@@ -294,9 +262,7 @@ def logout():
     return redirect("/")
 
 
-# -----------------------------
-# Run
-# -----------------------------
+
 if __name__ == "__main__":
 
     with app.app_context():
@@ -307,3 +273,5 @@ if __name__ == "__main__":
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+    
