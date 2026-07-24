@@ -1,0 +1,52 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<title>Add Device</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+SecureIoT Shield
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Add IoT Device</h2>
+
+<form method="POST">
+
+<label>Device Name</label><br>
+<input type="text" name="device_name" required><br><br>
+
+<label>Device Type</label><br>
+<input type="text" name="device_type" required><br><br>
+
+<label>IP Address</label><br>
+<input type="text" name="ip_address" required><br><br>
+
+<label>Status</label><br>
+
+<select name="status">
+<option value="Active">Active</option>
+<option value="Offline">Offline</option>
+</select>
+
+<br><br>
+
+<button class="btn" type="submit">Add Device</button>
+
+</form>
+
+<br>
+
+<a href="/devices" class="btn">View Devices</a>
+
+</div>
+
+</div>
+
+</body>
+</html>
