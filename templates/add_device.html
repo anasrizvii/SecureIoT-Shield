@@ -1,52 +1,130 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+
 <head>
+
 <title>Add Device</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link rel="stylesheet"
+href="{{ url_for('static',filename='style.css') }}">
+
 </head>
+
 <body>
 
-<div class="navbar">
-SecureIoT Shield
-</div>
+<div class="dashboard">
 
-<div class="container">
+<!-- Sidebar -->
 
-<div class="card">
+<div class="sidebar">
 
-<h2>Add IoT Device</h2>
+<h2>🛡 SecureIoT</h2>
 
-<form method="POST">
+<p>Security Operations Center</p>
 
-<label>Device Name</label><br>
-<input type="text" name="device_name" required><br><br>
+<hr>
 
-<label>Device Type</label><br>
-<input type="text" name="device_type" required><br><br>
+<a href="/dashboard">🏠 Dashboard</a>
 
-<label>IP Address</label><br>
-<input type="text" name="ip_address" required><br><br>
+<a href="/devices">📡 Devices</a>
 
-<label>Status</label><br>
+<a href="/add_device">➕ Add Device</a>
 
-<select name="status">
-<option value="Active">Active</option>
-<option value="Offline">Offline</option>
-</select>
+<a href="/security_logs">📄 Security Logs</a>
+
+<a href="/threat_detection">⚠ Threat Detection</a>
 
 <br><br>
 
-<button class="btn" type="submit">Add Device</button>
+<a href="/logout" class="btn">Logout</a>
 
-</form>
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<h1>Add New IoT Device</h1>
+
+<p style="color:#9CA3AF;">
+Register a new device into the SecureIoT network.
+</p>
 
 <br>
 
-<a href="/devices" class="btn">View Devices</a>
+<div class="card" style="max-width:700px;">
+
+<form method="POST">
+
+<label>📡 Device Name</label>
+
+<input
+type="text"
+name="device_name"
+placeholder="Enter Device Name"
+required>
+
+<label>🖥 Device Type</label>
+
+<input
+type="text"
+name="device_type"
+placeholder="Camera / Sensor / Smart Lock"
+required>
+
+<label>🌐 IP Address</label>
+
+<input
+type="text"
+name="ip_address"
+placeholder="192.168.1.10"
+required>
+
+<label>📶 Status</label>
+
+<select name="status">
+
+<option value="Active">
+
+🟢 Active
+
+</option>
+
+<option value="Offline">
+
+🔴 Offline
+
+</option>
+
+</select>
+
+<br>
+
+<button
+class="btn"
+type="submit">
+
+➕ Add Device
+
+</button>
+
+<a
+href="/devices"
+class="btn"
+style="background:#374151;">
+
+Back
+
+</a>
+
+</form>
+
+</div>
 
 </div>
 
 </div>
 
 </body>
+
 </html>

@@ -3,159 +3,92 @@
 
 <head>
 
-    <title>Threat Detection</title>
+<title>Threat Detection</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet"
+href="{{ url_for('static',filename='style.css') }}">
 
 </head>
 
 <body>
 
-<div class="navbar">
+<div class="dashboard">
 
-🛡 SecureIoT Shield
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<h2>🛡 SecureIoT</h2>
+
+<p>Security Operations Center</p>
+
+<hr>
+
+<a href="/dashboard">🏠 Dashboard</a>
+
+<a href="/devices">📡 Devices</a>
+
+<a href="/add_device">➕ Add Device</a>
+
+<a href="/security_logs">📄 Security Logs</a>
+
+<a href="/threat_detection">⚠ Threat Detection</a>
+
+<br><br>
+
+<a href="/logout" class="btn">Logout</a>
 
 </div>
 
-<div class="container">
+<!-- Main -->
 
-<div class="card">
+<div class="main">
 
-<h2>⚠ Threat Detection Center</h2>
+<h1>Threat Detection</h1>
 
 <p style="color:#9CA3AF;">
-
-Real-time monitoring of IoT devices and security threats.
-
+AI-based monitoring for suspicious IoT device activity.
 </p>
-
-<hr>
-
-<a href="/dashboard" class="btn">🏠 Dashboard</a>
-
-<a href="/devices" class="btn">📡 Devices</a>
-
-<a href="/security_logs" class="btn">📄 Security Logs</a>
-
-<hr>
-
-{% if threats %}
-
-<div style="background:#1f1f1f;border-left:6px solid red;padding:20px;border-radius:10px;">
-
-<h3 style="color:#EF4444;">⚠ Threats Detected</h3>
 
 <br>
 
-<ul>
+{% if threats %}
 
 {% for threat in threats %}
 
-<li class="status-red">{{ threat }}</li>
+<div class="card" style="margin-bottom:20px;border-left:6px solid #EF4444;">
 
-{% endfor %}
+<h2 style="color:#EF4444;">
+🚨 Threat Detected
+</h2>
 
-</ul>
+<p style="margin-top:15px;font-size:18px;">
+{{ threat }}
+</p>
 
 </div>
 
+{% endfor %}
+
 {% else %}
 
-<div style="background:#1f1f1f;border-left:6px solid #22C55E;padding:20px;border-radius:10px;">
+<div class="card" style="text-align:center;">
 
-<h3 class="status-green">🟢 No Threats Detected</h3>
+<h1 style="font-size:70px;">
+🛡
+</h1>
 
-<p>
+<h2 style="color:#22C55E;">
+No Threats Detected
+</h2>
 
-All IoT devices are online and operating securely.
-
+<p style="color:#9CA3AF;">
+All IoT devices are currently operating normally.
 </p>
 
 </div>
 
 {% endif %}
-
-<hr>
-
-<h3>Threat Summary</h3>
-
-<table>
-
-<tr>
-
-<th>Parameter</th>
-
-<th>Status</th>
-
-</tr>
-
-<tr>
-
-<td>Firewall</td>
-
-<td class="status-green">ACTIVE</td>
-
-</tr>
-
-<tr>
-
-<td>Authentication</td>
-
-<td class="status-green">SECURE</td>
-
-</tr>
-
-<tr>
-
-<td>Database</td>
-
-<td class="status-green">CONNECTED</td>
-
-</tr>
-
-<tr>
-
-<td>Device Monitoring</td>
-
-<td class="status-green">RUNNING</td>
-
-</tr>
-
-<tr>
-
-<td>Threat Engine</td>
-
-<td class="status-warning">SCANNING...</td>
-
-</tr>
-
-</table>
-
-<hr>
-
-<div style="background:black;color:#00ff00;padding:20px;border-radius:10px;font-family:monospace;">
-
-> Threat Detection Engine Started...<br>
-
-> Scanning Connected Devices...<br>
-
-> Firewall Rules Loaded...<br>
-
-> Monitoring Network Traffic...<br>
-
-> System Protected...
-
-</div>
-
-</div>
-
-<div class="footer">
-
-<hr>
-
-SecureIoT Shield © 2025
 
 </div>
 

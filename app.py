@@ -3,22 +3,25 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+# -----------------------------
+# Configuration
+# -----------------------------
 app.secret_key = "secureiot123"
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-
-# -------------------------
-# Database Tables
-# -------------------------
+# -----------------------------
+# Database Models
+# -----------------------------
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fullname = db.Column(db.String(100))
-    email = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
+    fullname = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
 
 
 class Device(db.Model):
@@ -35,19 +38,17 @@ class SecurityLog(db.Model):
     level = db.Column(db.String(50))
 
 
-# -------------------------
+# -----------------------------
 # Home
-# -------------------------
-
+# -----------------------------
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# -------------------------
+# -----------------------------
 # Register
-# -------------------------
-
+# -----------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -57,10 +58,10 @@ def register():
         email = request.form["email"]
         password = request.form["password"]
 
-        user = User.query.filter_by(email=email).first()
+        check = User.query.filter_by(email=email).first()
 
-        if user:
-            flash("Email already exists")
+        if check:
+            flash("Email Already Exists")
             return redirect("/register")
 
         new_user = User(
@@ -70,6 +71,14 @@ def register():
         )
 
         db.session.add(new_user)
+
+        db.session.add(
+            SecurityLog(
+                event=f"New User Registered : {fullname}",
+                level="INFO"
+            )
+        )
+
         db.session.commit()
 
         flash("Registration Successful")
@@ -78,10 +87,9 @@ def register():
     return render_template("register.html")
 
 
-# -------------------------
+# -----------------------------
 # Login
-# -------------------------
-
+# -----------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -96,7 +104,18 @@ def login():
         ).first()
 
         if user:
+
             session["user"] = user.fullname
+
+            db.session.add(
+                SecurityLog(
+                    event=f"{user.fullname} Logged In",
+                    level="INFO"
+                )
+            )
+
+            db.session.commit()
+
             return redirect("/dashboard")
 
         flash("Invalid Email or Password")
@@ -104,10 +123,9 @@ def login():
     return render_template("login.html")
 
 
-# -------------------------
+# -----------------------------
 # Dashboard
-# -------------------------
-
+# -----------------------------
 @app.route("/dashboard")
 def dashboard():
 
@@ -115,36 +133,50 @@ def dashboard():
         return redirect("/login")
 
     device_count = Device.query.count()
+
+    online_count = Device.query.filter_by(status="Online").count()
+
+    offline_count = Device.query.filter_by(status="Offline").count()
+
     log_count = SecurityLog.query.count()
+
+    recent_logs = SecurityLog.query.order_by(
+        SecurityLog.id.desc()
+    ).limit(5).all()
 
     return render_template(
         "dashboard.html",
         name=session["user"],
         device_count=device_count,
-        log_count=log_count
+        online_count=online_count,
+        offline_count=offline_count,
+        log_count=log_count,
+        recent_logs=recent_logs
     )
-    # -------------------------
-# View Devices
-# -------------------------
+    
 
+
+
+# -----------------------------
+# Devices
+# -----------------------------
 @app.route("/devices")
 def devices():
 
     if "user" not in session:
         return redirect("/login")
 
-    all_devices = Device.query.all()
+    devices = Device.query.all()
 
     return render_template(
         "devices.html",
-        devices=all_devices
+        devices=devices
     )
 
 
-# -------------------------
+# -----------------------------
 # Add Device
-# -------------------------
-
+# -----------------------------
 @app.route("/add_device", methods=["GET", "POST"])
 def add_device():
 
@@ -162,24 +194,25 @@ def add_device():
 
         db.session.add(device)
 
-        log = SecurityLog(
-            event=f"Device Added: {device.device_name}",
-            level="INFO"
+        db.session.add(
+            SecurityLog(
+                event=f"Device Added : {device.device_name}",
+                level="INFO"
+            )
         )
 
-        db.session.add(log)
-
         db.session.commit()
+
+        flash("Device Added Successfully")
 
         return redirect("/devices")
 
     return render_template("add_device.html")
 
 
-# -------------------------
+# -----------------------------
 # Delete Device
-# -------------------------
-
+# -----------------------------
 @app.route("/delete_device/<int:id>")
 def delete_device(id):
 
@@ -190,22 +223,23 @@ def delete_device(id):
 
     if device:
 
-        log = SecurityLog(
-            event=f"Device Deleted: {device.device_name}",
-            level="WARNING"
+        db.session.add(
+            SecurityLog(
+                event=f"Device Deleted : {device.device_name}",
+                level="WARNING"
+            )
         )
 
-        db.session.add(log)
         db.session.delete(device)
+
         db.session.commit()
 
     return redirect("/devices")
 
 
-# -------------------------
+# -----------------------------
 # Security Logs
-# -------------------------
-
+# -----------------------------
 @app.route("/security_logs")
 def security_logs():
 
@@ -220,10 +254,9 @@ def security_logs():
     )
 
 
-# -------------------------
+# -----------------------------
 # Threat Detection
-# -------------------------
-
+# -----------------------------
 @app.route("/threat_detection")
 def threat_detection():
 
@@ -234,12 +267,12 @@ def threat_detection():
 
     devices = Device.query.all()
 
-    for d in devices:
+    for device in devices:
 
-        if d.status == "Offline":
+        if device.status == "Offline":
 
             threats.append(
-                f"{d.device_name} is Offline - Possible Threat"
+                f"{device.device_name} ({device.ip_address}) is Offline"
             )
 
     return render_template(
@@ -248,26 +281,29 @@ def threat_detection():
     )
 
 
-# -------------------------
+# -----------------------------
 # Logout
-# -------------------------
-
+# -----------------------------
 @app.route("/logout")
 def logout():
 
     session.clear()
 
+    flash("Logged Out Successfully")
+
     return redirect("/")
 
 
-# -------------------------
-# Run Application
-# -------------------------
-
+# -----------------------------
+# Run
+# -----------------------------
 if __name__ == "__main__":
 
     with app.app_context():
         db.create_all()
 
     app.run(debug=True)
-    
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
