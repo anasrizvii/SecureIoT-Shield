@@ -1,39 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-<title>Login - SecureIoT Shield</title>
+<meta charset="UTF-8">
 
-<link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login | SecureIoT Shield</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="landing-container">
 
-<div class="card" style="max-width:450px;margin:70px auto;">
+<div class="landing-header">
 
-<h1 style="text-align:center;color:#8B5CF6;">
-🛡 SecureIoT Shield
-</h1>
+<div class="logo">🛡</div>
 
-<p style="text-align:center;color:#9CA3AF;margin-bottom:30px;">
-Security Operations Center Login
-</p>
+<h1>SecureIoT Shield</h1>
+
+<p>Security Operations Center</p>
+
+</div>
+
+<div class="landing-grid">
+
+<!-- Login Card -->
+
+<div class="landing-card">
+
+<h2>Login</h2>
+
+<p>Sign in to access your dashboard.</p>
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
+{% for message in messages %}
 
-{% for msg in messages %}
+<div class="alert">
 
-<p style="color:#EF4444;text-align:center;">
-{{ msg }}
-</p>
+{{ message }}
+
+</div>
 
 {% endfor %}
-
 {% endif %}
 {% endwith %}
 
@@ -55,42 +71,59 @@ name="password"
 placeholder="Enter Password"
 required>
 
-<button
-class="btn"
-style="width:100%;margin-top:10px;">
+<br><br>
 
-Login
+<button type="submit" class="landing-btn">
+
+<i class="fa-solid fa-right-to-bracket"></i>
+
+&nbsp; Login
 
 </button>
 
 </form>
 
-<hr style="margin:25px 0;">
+<div class="register-link">
 
-<p style="text-align:center;color:#9CA3AF;">
+<p>Don't have an account?</p>
 
-Don't have an account?
+<a href="/register">
 
-</p>
-
-<a
-href="/register"
-class="btn"
-style="width:100%;display:block;text-align:center;">
-
-Create New Account
+Create Account →
 
 </a>
 
-<br>
+</div>
 
-<a
-href="/"
-style="display:block;text-align:center;">
+</div>
 
-⬅ Back to Home
+<!-- Features -->
 
-</a>
+<div class="landing-card">
+
+<h2>Platform Features</h2>
+
+<ul class="feature-list">
+
+<li>✔ Secure Login</li>
+
+<li>✔ Device Monitoring</li>
+
+<li>✔ Threat Detection</li>
+
+<li>✔ Security Logs</li>
+
+<li>✔ Flask + SQLite</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="landing-footer">
+
+© 2026 SecureIoT Shield
 
 </div>
 

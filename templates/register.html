@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
-<title>Register - SecureIoT Shield</title>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Register | SecureIoT Shield</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
 
 </head>
 
 <body>
 
-<div class="container">
+<div class="landing-container">
 
-<div class="card" style="max-width:500px;margin:60px auto;">
+<div class="landing-header">
 
-<h1 style="text-align:center;color:#8B5CF6;">
-🛡 SecureIoT Shield
-</h1>
+<div class="logo">🛡</div>
 
-<p style="text-align:center;color:#9CA3AF;margin-bottom:30px;">
-Create Your Security Account
-</p>
+<h1>SecureIoT Shield</h1>
+
+<p>Create your SecureIoT account</p>
+
+</div>
+
+<div class="landing-grid">
+
+<!-- Register Card -->
+
+<div class="landing-card">
+
+<h2>Create Account</h2>
+
+<p>Register to access SecureIoT Shield.</p>
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-{% for msg in messages %}
-<p style="color:#EF4444;text-align:center;">
-{{ msg }}
-</p>
+{% for message in messages %}
+
+<div class="alert">
+
+{{ message }}
+
+</div>
+
 {% endfor %}
 {% endif %}
 {% endwith %}
@@ -59,41 +79,59 @@ name="password"
 placeholder="Enter Password"
 required>
 
-<button
-type="submit"
-class="btn"
-style="width:100%;margin-top:10px;">
+<br><br>
 
-Register
+<button type="submit" class="landing-btn">
+
+<i class="fa-solid fa-user-plus"></i>
+
+&nbsp; Create Account
 
 </button>
 
 </form>
 
-<hr style="margin:25px 0;">
+<div class="register-link">
 
-<p style="text-align:center;color:#9CA3AF;">
-Already have an account?
-</p>
+<p>Already have an account?</p>
 
-<a
-href="/login"
-class="btn"
-style="width:100%;display:block;text-align:center;">
+<a href="/login">
 
-Go to Login
+← Back to Login
 
 </a>
 
-<br>
+</div>
 
-<a
-href="/"
-style="display:block;text-align:center;">
+</div>
 
-⬅ Back to Home
+<!-- Right Side -->
 
-</a>
+<div class="landing-card">
+
+<h2>Why SecureIoT?</h2>
+
+<ul class="feature-list">
+
+<li>✔ Secure Authentication</li>
+
+<li>✔ IoT Device Management</li>
+
+<li>✔ Threat Detection</li>
+
+<li>✔ Security Logs</li>
+
+<li>✔ Modern Dashboard</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<div class="landing-footer">
+
+© 2026 SecureIoT Shield
 
 </div>
 

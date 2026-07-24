@@ -1,376 +1,42 @@
- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Dashboard | SecureIoT Shield</title>
-
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-</head>
-
-<body>
-
-<div class="dashboard">
-
-<!-- Sidebar -->
-
-<aside class="sidebar">
-
-<h2>🛡 SecureIoT Shield</h2>
-
-<p>Security Operations Center</p>
-
-<hr>
-
-<a href="/dashboard">🏠 Dashboard</a>
-
-<a href="/devices">📡 Devices</a>
-
-<a href="/add_device">➕ Add Device</a>
-
-<a href="/security_logs">📄 Security Logs</a>
-
-<a href="/threat_detection">⚠ Threat Detection</a>
-
-
-<div style="margin-top:40px;">
-
-<a href="/logout" class="btn">
-
-🚪 Logout
-
-</a>
-
-</div>
-
-</aside>
-
-
-<!-- Main -->
-
-<main class="main">
-
-
-<div class="topbar">
-
-<div>
-
-<h2>Dashboard</h2>
-
-<p style="color:#9CA3AF;">
-
-Welcome {{ name }}
-
-</p>
-
-</div>
-
-</div>
-
-
-<!-- Statistics -->
-
-<div class="cards">
-
-
-<div class="stat purple">
-
-<h3>Total Devices</h3>
-
-<h1>{{ device_count }}</h1>
-
-</div>
-
-
-<div class="stat green">
-
-<h3>Online Devices</h3>
-
-<h1>{{ online_count }}</h1>
-
-</div>
-
-
-<div class="stat red">
-
-<h3>Offline Devices</h3>
-
-<h1>{{ offline_count }}</h1>
-
-</div>
-
-
-<div class="stat blue">
-
-<h3>Security Logs</h3>
-
-<h1>{{ log_count }}</h1>
-
-</div>
-
-
-</div>
-
-
-
-<!-- Content -->
-
-<div class="content-grid">
-
-
-<!-- Recent Logs -->
-
-<div class="card logs">
-
-<h2>Recent Security Logs</h2>
-
-<hr>
-
-
-{% if recent_logs %}
-
-{% for log in recent_logs %}
-
-<div style="margin-bottom:18px;">
-
-<h4 style="color:#22C55E;">
-
-{{ log.level }}
-
-</h4>
-
-
-<p style="color:#CBD5E1;">
-
-{{ log.event }}
-
-</p>
-
-
-</div>
-
-{% endfor %}
-
-
-{% else %}
-
-
-<p style="color:#CBD5E1;">
-
-No Security Logs Found.
-
-</p>
-
-
-{% endif %}
-
-
-</div>
-
-
-
-<!-- Chart -->
-
-
-<div class="card">
-
-
-<h2 style="text-align:center;">
-
-Device Status
-
-</h2>
-
-
-<div style="width:220px;height:220px;margin:auto;">
-
-<canvas id="myChart"></canvas>
-
-</div>
-
-
-<br>
-
-
-<p style="text-align:center;color:#9CA3AF;">
-
-Live Monitoring
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-<!-- Quick Actions -->
-
-
-<h2 style="margin:35px 0 20px;">
-
-Quick Actions
-
-</h2>
-
-
-
-<div class="quick">
-
-
-<a href="/add_device" class="quick-card">
-
-<h2>➕</h2>
-
-<h3>Add Device</h3>
-
-<p>Register New Device</p>
-
-</a>
-
-
-
-<a href="/devices" class="quick-card">
-
-<h2>📡</h2>
-
-<h3>Devices</h3>
-
-<p>Manage Devices</p>
-
-</a>
-
-
-
-<a href="/security_logs" class="quick-card">
-
-<h2>📄</h2>
-
-<h3>Security Logs</h3>
-
-<p>View Security Logs</p>
-
-</a>
-
-
-
-<a href="/threat_detection" class="quick-card">
-
-<h2>🛡</h2>
-
-<h3>Threat Detection</h3>
-
-<p>Monitor Threats</p>
-
-</a>
-
-
-</div>
-
-
-</main>
-
-
-</div>
-
-
-
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const canvas = document.getElementById("myChart");
 
-const ctx = document.getElementById("myChart");
+    if (!canvas) return;
 
+    const ctx = canvas.getContext("2d");
 
-new Chart(ctx, {
-
-
-type: "doughnut",
-
-
-data: {
-
-
-labels: ["Online", "Offline"],
-
-
-datasets: [{
-
-
-data: [{{ online_count }}, {{ offline_count }}],
-
-
-backgroundColor: [
-
-
-"#22C55E",
-
-"#EF4444"
-
-
-],
-
-
-borderWidth: 0
-
-
-}]
-
-
-},
-
-
-options: {
-
-
-responsive: true,
-
-maintainAspectRatio: false,
-
-cutout: "70%",
-
-
-plugins: {
-
-
-legend: {
-
-
-position: "bottom",
-
-
-labels: {
-
-
-color: "white"
-
-
-}
-
-
-}
-
-
-}
-
-
-}
-
+    new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Online", "Offline"],
+            datasets: [{
+                data: [
+                    Number("{{ online_count }}"),
+                    Number("{{ offline_count }}")
+                ],
+                backgroundColor: [
+                    "#22C55E",
+                    "#EF4444"
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "70%",
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        color: "white"
+                    }
+                }
+            }
+        }
+    });
 
 });
-
-
 </script>
-
-
-</body>
-
-</html>
